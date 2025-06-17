@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Live Google Sheets Data</title>
+  <script src="https://cdn.jsdelivr.net/npm/tabletop@1.5.1/tabletop.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Live Data Feed</h1>
+  <div id="data">Loading data from Google Sheets...</div>
+
+  <script>
+    function showInfo(data) {
+      if (!data || data.length === 0) {
+        document.getElementById('data').innerHTML = "No data found.";
+        return;
+      }
+
+      let output = '<table><tr>';
+      const headers = Object.keys(data[0]);
+      headers.forEach(header => output += `<th>${header}</th>`);
+      output += '</tr>';
+
+      data.forEach(row => {
+        output += '<tr>';
+        headers.forEach(header => output += `<td>${row[header] || ''}</td>`);
+        output += '</tr>';
+      });
+
+      output += '</table>';
+      document.getElementById('data').innerHTML = output;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      Tabletop.init({
+        key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRp77E3FU7ACQ3cQ3sdHzA9LJxOFH08Vv8E0KiZ9vNDLabMurFevrVj7nyHE3o3Ga0YrYfee5UPOm-3/pubhtml',
+        callback: showInfo,
+        simpleSheet: true
+      });
+    });
+  </script>
+</body>
+</html>
