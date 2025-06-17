@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Live Google Sheet Data</title>
+  <title>Sporting Clay Live Scores</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -34,7 +34,7 @@
 
   <script>
     const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
-    const sheetName = 'Sheet1'; // Change if your tab is named differently
+    const sheetName = 'Sheet1'; // Make sure this matches your sheet tab name
 
     async function loadSheetData() {
       try {
@@ -66,7 +66,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadSheetData();
-      setInterval(loadSheetData, 30000); // Auto-refresh every 30 seconds
+      setInterval(loadSheetData, 30000); // Refresh every 30 seconds
     });
   </script>
 </body>
