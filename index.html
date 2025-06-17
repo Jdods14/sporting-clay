@@ -96,18 +96,22 @@
         const data = await res.json();
 
         // Individual Leaderboard
-        const sortedIndividuals = [...data]
-          .filter(row => row.Points && !isNaN(row.Points))
-          .sort((a, b) => parseInt(b.Points) - parseInt(a.Points));
+        const individuals = data
+          .filter(row => row.Name && !isNaN(parseInt(row.Total)))
+          .map(row => ({
+            name: row.Name,
+            total: parseInt(row.Total),
+          }))
+          .sort((a, b) => b.total - a.total);
 
-        let indivHTML = '<table><tr><th>Name</th><th>Points</th></tr>';
-        sortedIndividuals.forEach((row, index) => {
+        let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
+        individuals.forEach((row, index) => {
           const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
           const highlightClass = index < 3 ? 'highlight' : '';
           indivHTML += `
             <tr class="${highlightClass}">
-              <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.Name}</td>
-              <td>${row.Points}</td>
+              <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
+              <td>${row.total}</td>
             </tr>`;
         });
         indivHTML += '</table>';
@@ -117,17 +121,17 @@
         const teamTotals = {};
         data.forEach(row => {
           const team = row.Team;
-          const points = parseInt(row.Points);
-          if (team && !isNaN(points)) {
+          const total = parseInt(row.Total);
+          if (team && !isNaN(total)) {
             if (!teamTotals[team]) teamTotals[team] = 0;
-            teamTotals[team] += points;
+            teamTotals[team] += total;
           }
         });
 
         const sortedTeams = Object.entries(teamTotals)
           .sort((a, b) => b[1] - a[1]);
 
-        let teamHTML = '<table><tr><th>Team</th><th>Total Points</th></tr>';
+        let teamHTML = '<table><tr><th>Team</th><th>Total</th></tr>';
         sortedTeams.forEach(([team, total], index) => {
           const highlightClass = index < 4 ? 'highlight' : '';
           teamHTML += `<tr class="${highlightClass}"><td>${team}</td><td>${total}</td></tr>`;
