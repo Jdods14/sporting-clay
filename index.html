@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Live Google Sheets Data</title>
-  <script src="https://cdn.jsdelivr.net/npm/tabletop@1.5.1/tabletop.min.js"></script>
+  <title>Live Google Sheet Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -29,40 +29,44 @@
   </style>
 </head>
 <body>
-  <h1>Live Data Feed</h1>
+  <h1>Sporting Clay Live Scores</h1>
   <div id="data">Loading data from Google Sheets...</div>
 
   <script>
-    function showInfo(data) {
-      if (!data || data.length === 0) {
-        document.getElementById('data').innerHTML = "No data found.";
-        return;
-      }
+    const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
+    const sheetName = 'Sheet1'; // Change if your tab is named differently
 
-      let output = '<table><tr>';
-      const headers = Object.keys(data[0]);
-      headers.forEach(header => output += `<th>${header}</th>`);
-      output += '</tr>';
+    async function loadSheetData() {
+      try {
+        const response = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
+        const data = await response.json();
+        if (data.length === 0) {
+          document.getElementById('data').innerHTML = 'No data found.';
+          return;
+        }
 
-      data.forEach(row => {
-        output += '<tr>';
-        headers.forEach(header => output += `<td>${row[header] || ''}</td>`);
+        let output = '<table><tr>';
+        const headers = Object.keys(data[0]);
+        headers.forEach(header => output += `<th>${header}</th>`);
         output += '</tr>';
-      });
 
-      output += '</table>';
-      document.getElementById('data').innerHTML = output;
+        data.forEach(row => {
+          output += '<tr>';
+          headers.forEach(header => output += `<td>${row[header] || ''}</td>`);
+          output += '</tr>';
+        });
+
+        output += '</table>';
+        document.getElementById('data').innerHTML = output;
+      } catch (err) {
+        document.getElementById('data').innerHTML = 'Error loading data.';
+        console.error(err);
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      Tabletop.init({
-        key: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRp77E3FU7ACQ3cQ3sdHzA9LJxOFH08Vv8E0KiZ9vNDLabMurFevrVj7nyHE3o3Ga0YrYfee5UPOm-3/pubhtml',
-        callback: showInfo,
-        simpleSheet: true
-      });
-
-      // 🔄 Refresh the page every 30 seconds
-      setInterval(() => location.reload(), 30000);
+      loadSheetData();
+      setInterval(loadSheetData, 30000); // Auto-refresh every 30 seconds
     });
   </script>
 </body>
