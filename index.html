@@ -70,6 +70,20 @@
         flex-direction: column;
         align-items: center;
       }
+    
+    .station-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 0.95em;
+    }
+
+    .station-table th,
+    .station-table td {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 6px;
+    }
     }
   </style>
 </head>
@@ -89,7 +103,6 @@
 <script>
   const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
   const sheetName = 'Regular-Season';
-
   const stationNumbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
   async function loadSheetData() {
@@ -103,7 +116,7 @@
         .map((row, index) => ({
           name: row.Name,
           total: parseInt(row.Total),
-          stations: stationNumbers.map(n => `${n}: ${row[`Station ${n}`] || 0}`),
+          stations: stationNumbers.map(n => row[`Station ${n}`] || '0'),
           id: `detail-${index}`
         }))
         .sort((a, b) => b.total - a.total);
@@ -117,11 +130,12 @@
             <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
             <td>${row.total}</td>
           </tr>
-          <tr class="details" id="${row.id}">
+          <tr class="details" id="${row.id}" style="display: none;">
             <td colspan="2">
-              <div class="station-scores">
-                ${row.stations.map(s => `<span>${s}</span>`).join('')}
-              </div>
+              <table class="station-table">
+                <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
+                <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
+              </table>
             </td>
           </tr>
         `;
@@ -169,6 +183,6 @@
     loadSheetData();
     setInterval(loadSheetData, 30000);
   });
-  </script>
+</script>
 </body>
 </html>
