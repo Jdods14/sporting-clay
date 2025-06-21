@@ -133,6 +133,7 @@ function loadPartnerLogos() {
     // Add or update filenames as needed here
   ];
 
+  // Add logos once
   partnerImages.forEach(filename => {
     const img = document.createElement("img");
     img.src = `images/partners/${filename}`;
@@ -140,7 +141,7 @@ function loadPartnerLogos() {
     partnerContainer.appendChild(img);
   });
 
-  // Duplicate the logos for smooth looping scroll
+  // Add logos again to create seamless loop
   partnerImages.forEach(filename => {
     const img = document.createElement("img");
     img.src = `images/partners/${filename}`;
