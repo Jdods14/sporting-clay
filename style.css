@@ -4,6 +4,7 @@ body {
   background-color: #f4f4f4;
   margin: 0;
   padding: 2rem;
+  padding-bottom: 140px; /* creates space below the lowest content */
 }
 
 /* HEADER SECTION */
