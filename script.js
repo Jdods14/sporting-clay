@@ -119,7 +119,7 @@ function loadPartnerLogos() {
     "logo-1.png", 
     "logo-2.webp", 
     "logo-3.png", 
-    "logo-4a.jpg", 
+    "logo-4a.png", 
     "logo-5.png",
     "logo-6.png",
     "logo-7.png",
