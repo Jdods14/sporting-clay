@@ -5,12 +5,15 @@
   <title>Sporting Clay Live Scores</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f4f4f4;
       margin: 0;
       padding: 2rem;
     }
+
+    
 
     h1 {
       text-align: center;
@@ -20,20 +23,20 @@
     .leaderboards {
       display: flex;
       flex-wrap: wrap;
-      gap: 40px;
       justify-content: center;
-      max-width: 1200px;
+      gap: 40px;
+      width: 95%;
+      max-width: 1600px;
       margin: 0 auto;
     }
-
 
     .board {
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      width: 420px;
-      max-width: 100%;
+      flex: 1 1 45%;
+      min-width: 380px;
     }
 
     .board h2 {
