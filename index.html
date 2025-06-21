@@ -96,39 +96,48 @@
     }
 
     .event-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 20px 40px;
-    background-color: #fff;
-    border-radius: 10px;
-    margin-bottom: 40px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.05);
-    flex-wrap: wrap;
-  }
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      max-height: 200px;
+      background-color: #fff;
+      border-radius: 10px;
+      margin-bottom: 40px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      gap: 20px;
+    }
 
-  .event-logo {
-    height: 60px;
-    max-width: 140px;
-    object-fit: contain;
-  }
+    .event-logo-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-height: 200px;
+      overflow: hidden;
+    }
 
-  .event-title {
-    text-align: center;
-    flex: 1 1 auto;
-  }
+    .event-logo {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
 
-  .event-title h1 {
-    margin: 0;
-    font-size: 1.8rem;
-  }
+    .event-title {
+      flex: 1;
+      text-align: center;
+    }
 
-  .event-subtitle {
-    margin: 4px 0 0;
-    font-size: 1rem;
-    color: #666;
-  }
+    .event-title h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .event-subtitle {
+      margin: 4px 0 0;
+      font-size: 1rem;
+      color: #666;
+    }
     }
   </style>
 </head>
@@ -137,13 +146,20 @@
 
 <body>
   <header class="event-header">
-    <img src="images/BATTLESHIP.png" alt="Event Logo" class="event-logo">
+    <div class="event-logo-container">
+      <img src="images/BATTLESHIP.png" alt="Event Logo" class="event-logo">
+    </div>
+
     <div class="event-title">
       <h1>USS New Jersey - Sporting Clay Invitational</h1>
       <p class="event-subtitle">Live Scores | 26 June 2025</p>
     </div>
-    <img src="images/bsnj-logo.png" alt="Partner Logo" class="event-logo">
+
+    <div class="event-logo-container">
+      <img src="images/bsnj-logo.png" alt="Partner Logo" class="event-logo">
+    </div>
   </header>
+
   <div class="leaderboards">
     <div class="board">
       <h2>🏅 Individuals</h2>
