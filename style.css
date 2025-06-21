@@ -1,0 +1,152 @@
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 2rem;
+}
+
+/* HEADER SECTION */
+.event-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 40px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  gap: 20px;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.event-logo-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-logo {
+  height: 100%;
+  max-height: 180px;
+  width: auto;
+  object-fit: contain;
+}
+
+.event-title {
+  flex: 1;
+  text-align: center;
+}
+
+.event-title h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.event-subtitle {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+/* LEADERBOARD SECTION */
+.leaderboards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  width: 95%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.board {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  flex: 1 1 45%;
+  min-width: 380px;
+}
+
+.board h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+th {
+  background-color: #fafafa;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tr.highlight {
+  background-color: #eaeaea;
+  font-weight: bold;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.details {
+  background-color: #fdfdfd;
+  display: none;
+}
+
+.medal {
+  margin-right: 6px;
+}
+
+/* STATION TABLES */
+.station-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.95em;
+}
+
+.station-table th,
+.station-table td {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 6px;
+}
+
+.team-subtable td:first-child {
+  text-align: left;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .leaderboards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .event-title h1 {
+    font-size: 1.4rem;
+  }
+
+  .event-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .board {
+    min-width: unset;
+  }
+}

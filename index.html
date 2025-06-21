@@ -1,147 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
   <meta charset="UTF-8">
-  <title>Sporting Clay Live Scores</title>
+  <title>USS New Jersey - Sporting Clay Invitational</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 2rem;
-    }
-
-    
-
-    h1 {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .leaderboards {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 40px;
-      width: 95%;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-
-    .board {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      flex: 1 1 45%;
-      min-width: 380px;
-    }
-
-    .board h2 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid #e0e0e0;
-    }
-
-    th {
-      background-color: #fafafa;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    tr.highlight {
-      background-color: #eaeaea;
-      font-weight: bold;
-    }
-
-    .medal {
-      margin-right: 6px;
-    }
-
-    @media (max-width: 900px) {
-      .leaderboards {
-        flex-direction: column;
-        align-items: center;
-      }
-    
-    .station-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 0.95em;
-    }
-
-    .station-table th,
-    .station-table td {
-      border: 1px solid #ccc;
-      text-align: center;
-      padding: 6px;
-    }
-
-    .team-subtable td:first-child {
-      text-align: left;
-    }
-
-    .event-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      max-height: 200px;
-      background-color: #fff;
-      border-radius: 10px;
-      margin-bottom: 40px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-      gap: 20px;
-    }
-
-    .event-logo-container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      max-height: 200px;
-      overflow: hidden;
-    }
-
-    .event-logo {
-      max-height: 100%;
-      max-width: 100%;
-      object-fit: contain;
-    }
-
-    .event-title {
-      flex: 1;
-      text-align: center;
-    }
-
-    .event-title h1 {
-      margin: 0;
-      font-size: 1.8rem;
-    }
-
-    .event-subtitle {
-      margin: 4px 0 0;
-      font-size: 1rem;
-      color: #666;
-    }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 
 
 <body>
@@ -149,12 +15,10 @@
     <div class="event-logo-container">
       <img src="images/BATTLESHIP.png" alt="Event Logo" class="event-logo">
     </div>
-
     <div class="event-title">
       <h1>USS New Jersey - Sporting Clay Invitational</h1>
       <p class="event-subtitle">Live Scores | 26 June 2025</p>
     </div>
-
     <div class="event-logo-container">
       <img src="images/bsnj-logo.png" alt="Partner Logo" class="event-logo">
     </div>
@@ -171,119 +35,8 @@
     </div>
   </div>
 
-<script>
-  const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
-  const sheetName = 'Regular-Season';
-  const stationNumbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
-
-  async function loadSheetData() {
-    try {
-      const res = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
-      const data = await res.json();
-
-      // --- INDIVIDUALS ---
-      const individuals = data
-        .filter(row => row.Name && !isNaN(parseInt(row.Total)))
-        .map((row, index) => ({
-          name: row.Name,
-          total: parseInt(row.Total),
-          stations: stationNumbers.map(n => row[`Station ${n}`] || '0'),
-          id: `detail-${index}`
-        }))
-        .sort((a, b) => b.total - a.total);
-
-      let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
-      individuals.forEach((row, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-        const highlightClass = index < 3 ? 'highlight' : '';
-        indivHTML += `
-          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
-            <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
-            <td>${row.total}</td>
-          </tr>
-          <tr class="details" id="${row.id}" style="display: none;">
-            <td colspan="2">
-              <table class="station-table">
-                <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
-                <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
-              </table>
-            </td>
-          </tr>
-        `;
-      });
-      indivHTML += '</table>';
-      document.getElementById('individual-board').innerHTML = indivHTML;
-
-      // --- TEAMS ---
-      const teamMap = {};
-      data.forEach((row, idx) => {
-        const team = row.Team;
-        if (!teamMap[team]) teamMap[team] = [];
-        teamMap[team].push({
-          name: row.Name,
-          total: parseInt(row.Total),
-          stations: stationNumbers.map(n => row[`Station ${n}`] || '0')
-        });
-      });
-
-      const sortedTeams = Object.entries(teamMap)
-        .map(([teamName, players], i) => ({
-          team: teamName,
-          total: players.reduce((sum, p) => sum + (isNaN(p.total) ? 0 : p.total), 0),
-          players: players,
-          id: `team-detail-${i}`
-        }))
-        .sort((a, b) => b.total - a.total);
-
-      let teamHTML = '<table><tr><th>Team</th><th>Total</th></tr>';
-      sortedTeams.forEach((team, index) => {
-        const highlightClass = index < 4 ? 'highlight' : '';
-        teamHTML += `
-          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${team.id}')">
-            <td>${team.team}</td>
-            <td>${team.total}</td>
-          </tr>
-          <tr class="details" id="${team.id}" style="display: none;">
-            <td colspan="2">
-              <table class="station-table team-subtable">
-                <tr>
-                  <th>Name</th>
-                  ${stationNumbers.map(n => `<th>${n}</th>`).join('')}
-                  <th>Total</th>
-                </tr>
-                ${team.players.map(player => `
-                  <tr>
-                    <td>${player.name}</td>
-                    ${player.stations.map(s => `<td>${s}</td>`).join('')}
-                    <td>${isNaN(player.total) ? 0 : player.total}</td>
-                  </tr>
-                `).join('')}
-              </table>
-            </td>
-          </tr>
-        `;
-      });
-      teamHTML += '</table>';
-      document.getElementById('team-board').innerHTML = teamHTML;
-
-    } catch (err) {
-      document.getElementById('individual-board').innerHTML = 'Error loading data.';
-      document.getElementById('team-board').innerHTML = 'Error loading data.';
-      console.error(err);
-    }
-  }
-
-  function toggleDetails(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.style.display = el.style.display === 'table-row' ? 'none' : 'table-row';
-    }
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    loadSheetData();
-    setInterval(loadSheetData, 30000);
-  });
-</script>
+  <script src="script.js"></script>
 </body>
+
+
 </html>
