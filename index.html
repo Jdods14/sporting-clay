@@ -22,7 +22,10 @@
       flex-wrap: wrap;
       gap: 40px;
       justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
     }
+
 
     .board {
       background: #fff;
@@ -84,9 +87,16 @@
       text-align: center;
       padding: 6px;
     }
+
+    .team-subtable td:first-child {
+      text-align: left;
+    }
     }
   </style>
 </head>
+
+
+
 <body>
   <h1>Sporting Clay Live Scores</h1>
   <div class="leaderboards">
@@ -144,23 +154,53 @@
       document.getElementById('individual-board').innerHTML = indivHTML;
 
       // --- TEAMS ---
-      const teamTotals = {};
-      data.forEach(row => {
+      const teamMap = {};
+      data.forEach((row, idx) => {
         const team = row.Team;
-        const total = parseInt(row.Total);
-        if (team && !isNaN(total)) {
-          if (!teamTotals[team]) teamTotals[team] = 0;
-          teamTotals[team] += total;
-        }
+        if (!teamMap[team]) teamMap[team] = [];
+        teamMap[team].push({
+          name: row.Name,
+          total: parseInt(row.Total),
+          stations: stationNumbers.map(n => row[`Station ${n}`] || '0')
+        });
       });
 
-      const sortedTeams = Object.entries(teamTotals)
-        .sort((a, b) => b[1] - a[1]);
+      const sortedTeams = Object.entries(teamMap)
+        .map(([teamName, players], i) => ({
+          team: teamName,
+          total: players.reduce((sum, p) => sum + (isNaN(p.total) ? 0 : p.total), 0),
+          players: players,
+          id: `team-detail-${i}`
+        }))
+        .sort((a, b) => b.total - a.total);
 
       let teamHTML = '<table><tr><th>Team</th><th>Total</th></tr>';
-      sortedTeams.forEach(([team, total], index) => {
+      sortedTeams.forEach((team, index) => {
         const highlightClass = index < 4 ? 'highlight' : '';
-        teamHTML += `<tr class="${highlightClass}"><td>${team}</td><td>${total}</td></tr>`;
+        teamHTML += `
+          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${team.id}')">
+            <td>${team.team}</td>
+            <td>${team.total}</td>
+          </tr>
+          <tr class="details" id="${team.id}" style="display: none;">
+            <td colspan="2">
+              <table class="station-table team-subtable">
+                <tr>
+                  <th>Name</th>
+                  ${stationNumbers.map(n => `<th>${n}</th>`).join('')}
+                  <th>Total</th>
+                </tr>
+                ${team.players.map(player => `
+                  <tr>
+                    <td>${player.name}</td>
+                    ${player.stations.map(s => `<td>${s}</td>`).join('')}
+                    <td>${isNaN(player.total) ? 0 : player.total}</td>
+                  </tr>
+                `).join('')}
+              </table>
+            </td>
+          </tr>
+        `;
       });
       teamHTML += '</table>';
       document.getElementById('team-board').innerHTML = teamHTML;
