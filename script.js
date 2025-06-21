@@ -117,7 +117,7 @@ function loadPartnerLogos() {
   const partnerContainer = document.getElementById('partner-strip');
   const partnerImages = [
     "logo-1.png", 
-    "logo-2.jpg", 
+    "logo-2.webp", 
     "logo-3.png", 
     "logo-4.jpg", 
     "logo-5.png",
