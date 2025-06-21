@@ -150,3 +150,38 @@ tr.highlight {
     min-width: unset;
   }
 }
+
+
+
+.partner-strip-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #ccc;
+  padding: 10px 0;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.partner-strip {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding-left: 100%;
+  animation: scroll-partners 60s linear infinite;
+}
+
+.partner-strip img {
+  height: 100px;
+  width: auto;
+  max-height: 100px;
+  max-width: 100px;
+  object-fit: contain;
+}
+
+@keyframes scroll-partners {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
