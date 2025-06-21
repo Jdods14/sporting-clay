@@ -86,70 +86,89 @@
     </div>
   </div>
 
-  <script>
-    const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
-    const sheetName = 'Regular-Season';
+<script>
+  const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
+  const sheetName = 'Regular-Season';
 
-    async function loadSheetData() {
-      try {
-        const res = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
-        const data = await res.json();
+  const stationNumbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
-        // Individual Leaderboard
-        const individuals = data
-          .filter(row => row.Name && !isNaN(parseInt(row.Total)))
-          .map(row => ({
-            name: row.Name,
-            total: parseInt(row.Total),
-          }))
-          .sort((a, b) => b.total - a.total);
+  async function loadSheetData() {
+    try {
+      const res = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
+      const data = await res.json();
 
-        let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
-        individuals.forEach((row, index) => {
-          const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-          const highlightClass = index < 3 ? 'highlight' : '';
-          indivHTML += `
-            <tr class="${highlightClass}">
-              <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
-              <td>${row.total}</td>
-            </tr>`;
-        });
-        indivHTML += '</table>';
-        document.getElementById('individual-board').innerHTML = indivHTML;
+      // --- INDIVIDUALS ---
+      const individuals = data
+        .filter(row => row.Name && !isNaN(parseInt(row.Total)))
+        .map((row, index) => ({
+          name: row.Name,
+          total: parseInt(row.Total),
+          stations: stationNumbers.map(n => `${n}: ${row[`Station ${n}`] || 0}`),
+          id: `detail-${index}`
+        }))
+        .sort((a, b) => b.total - a.total);
 
-        // Team Leaderboard
-        const teamTotals = {};
-        data.forEach(row => {
-          const team = row.Team;
-          const total = parseInt(row.Total);
-          if (team && !isNaN(total)) {
-            if (!teamTotals[team]) teamTotals[team] = 0;
-            teamTotals[team] += total;
-          }
-        });
+      let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
+      individuals.forEach((row, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+        const highlightClass = index < 3 ? 'highlight' : '';
+        indivHTML += `
+          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
+            <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
+            <td>${row.total}</td>
+          </tr>
+          <tr class="details" id="${row.id}">
+            <td colspan="2">
+              <div class="station-scores">
+                ${row.stations.map(s => `<span>${s}</span>`).join('')}
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+      indivHTML += '</table>';
+      document.getElementById('individual-board').innerHTML = indivHTML;
 
-        const sortedTeams = Object.entries(teamTotals)
-          .sort((a, b) => b[1] - a[1]);
+      // --- TEAMS ---
+      const teamTotals = {};
+      data.forEach(row => {
+        const team = row.Team;
+        const total = parseInt(row.Total);
+        if (team && !isNaN(total)) {
+          if (!teamTotals[team]) teamTotals[team] = 0;
+          teamTotals[team] += total;
+        }
+      });
 
-        let teamHTML = '<table><tr><th>Team</th><th>Total</th></tr>';
-        sortedTeams.forEach(([team, total], index) => {
-          const highlightClass = index < 4 ? 'highlight' : '';
-          teamHTML += `<tr class="${highlightClass}"><td>${team}</td><td>${total}</td></tr>`;
-        });
-        teamHTML += '</table>';
-        document.getElementById('team-board').innerHTML = teamHTML;
+      const sortedTeams = Object.entries(teamTotals)
+        .sort((a, b) => b[1] - a[1]);
 
-      } catch (err) {
-        document.getElementById('individual-board').innerHTML = 'Error loading data.';
-        document.getElementById('team-board').innerHTML = 'Error loading data.';
-        console.error(err);
-      }
+      let teamHTML = '<table><tr><th>Team</th><th>Total</th></tr>';
+      sortedTeams.forEach(([team, total], index) => {
+        const highlightClass = index < 4 ? 'highlight' : '';
+        teamHTML += `<tr class="${highlightClass}"><td>${team}</td><td>${total}</td></tr>`;
+      });
+      teamHTML += '</table>';
+      document.getElementById('team-board').innerHTML = teamHTML;
+
+    } catch (err) {
+      document.getElementById('individual-board').innerHTML = 'Error loading data.';
+      document.getElementById('team-board').innerHTML = 'Error loading data.';
+      console.error(err);
     }
+  }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadSheetData();
-      setInterval(loadSheetData, 30000); // Refresh every 30 sec
-    });
+  function toggleDetails(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.style.display = el.style.display === 'table-row' ? 'none' : 'table-row';
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    loadSheetData();
+    setInterval(loadSheetData, 30000);
+  });
   </script>
 </body>
 </html>
