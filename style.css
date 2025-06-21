@@ -167,11 +167,10 @@ tr.highlight {
 
 .partner-strip {
   display: flex;
-  align-items: center;
   gap: 40px;
-  animation: scroll-partners 48s linear infinite; /* 20% faster */
-  padding-left: 10%; /* 10% lead-in spacing */
+  align-items: center;
   width: max-content;
+  animation: scroll-partners 48s linear infinite;
 }
 
 .partner-strip img {
@@ -180,9 +179,14 @@ tr.highlight {
   max-height: 100px;
   max-width: 100px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 @keyframes scroll-partners {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); } /* Only scroll halfway if you're duplicating the logos */
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
