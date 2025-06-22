@@ -1,13 +1,13 @@
+
 const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
-const sheetName = 'Regular-Season';
 const stationNumbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
-async function loadSheetData() {
+async function loadSheetData(sheetName = 'Regular-Season') {
   try {
     const res = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
     const data = await res.json();
 
-    // --- INDIVIDUALS ---
+    // INDIVIDUALS
     const individuals = data
       .filter(row => row.Name && !isNaN(parseInt(row.Total)))
       .map((row, index) => ({
@@ -19,28 +19,32 @@ async function loadSheetData() {
       .sort((a, b) => b.total - a.total);
 
     let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
-    individuals.forEach((row, index) => {
-      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-      const highlightClass = index < 3 ? 'highlight' : '';
-      indivHTML += `
-        <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
-          <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
-          <td>${row.total}</td>
-        </tr>
-        <tr class="details" id="${row.id}" style="display: none;">
-          <td colspan="2">
-            <table class="station-table">
-              <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
-              <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
-            </table>
-          </td>
-        </tr>
-      `;
-    });
+    if (sheetName === 'Regular-Season') {
+      individuals.forEach((row, index) => {
+        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+        const highlightClass = index < 3 ? 'highlight' : '';
+        indivHTML += `
+          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
+            <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
+            <td>${row.total}</td>
+          </tr>
+          <tr class="details" id="${row.id}" style="display: none;">
+            <td colspan="2">
+              <table class="station-table">
+                <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
+                <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
+              </table>
+            </td>
+          </tr>
+        `;
+      });
+    } else {
+      indivHTML += `<tr><td colspan="2" style="text-align:center;">Not scored in this round.</td></tr>`;
+    }
     indivHTML += '</table>';
     document.getElementById('individual-board').innerHTML = indivHTML;
 
-    // --- TEAMS ---
+    // TEAMS
     const teamMap = {};
     data.forEach((row, idx) => {
       const team = row.Team;
@@ -106,42 +110,19 @@ function toggleDetails(id) {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  loadSheetData();
-  loadPartnerLogos();
-  setInterval(loadSheetData, 30000);
-});
-
-// Dynamically load all partner logos
 function loadPartnerLogos() {
   const partnerContainer = document.getElementById('partner-strip');
   const partnerImages = [
-    "logo-1.png", 
-    "logo-2.webp", 
-    "logo-3.png", 
-    "logo-4a.png", 
-    "logo-5.png",
-    "logo-6.png",
-    "logo-7.png",
-    "logo-8.png",
-    "logo-9.png",
-    "logo-10.png",
-    "logo-11.png",
-    "logo-12.png",
-    "logo-13.png",
-    "logo-14.png"
-    // Add or update filenames as needed here
+    "logo-1.png", "logo-2.webp", "logo-3.png", "logo-4a.png", "logo-5.png",
+    "logo-6.png", "logo-7.png", "logo-8.png", "logo-9.png", "logo-10.png",
+    "logo-11.png", "logo-12.png", "logo-13.png", "logo-14.png"
   ];
-
-  // Add logos once
   partnerImages.forEach(filename => {
     const img = document.createElement("img");
     img.src = `images/partners/${filename}`;
     img.alt = "Partner Logo";
     partnerContainer.appendChild(img);
   });
-
-  // Add logos again to create seamless loop
   partnerImages.forEach(filename => {
     const img = document.createElement("img");
     img.src = `images/partners/${filename}`;
@@ -149,3 +130,21 @@ function loadPartnerLogos() {
     partnerContainer.appendChild(img);
   });
 }
+
+document.querySelectorAll(".toggle-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const selectedTab = btn.getAttribute("data-tab");
+    loadSheetData(selectedTab);
+  });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadSheetData('Regular-Season');
+  loadPartnerLogos();
+  setInterval(() => {
+    const activeTab = document.querySelector(".toggle-btn.active").getAttribute("data-tab");
+    loadSheetData(activeTab);
+  }, 30000);
+});

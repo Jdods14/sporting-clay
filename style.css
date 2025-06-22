@@ -201,3 +201,29 @@ tr.highlight {
     transform: translateX(-50%);
   }
 }
+
+.score-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px auto 30px;
+}
+
+.toggle-btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toggle-btn:hover {
+  background-color: #ddd;
+}
+
+.toggle-btn.active {
+  background-color: #bbb;
+  font-weight: bold;
+}
