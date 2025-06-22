@@ -39,17 +39,27 @@ body {
 .event-title {
   flex: 1;
   text-align: center;
+  line-height: 1.2;
 }
 
-.event-title h1 {
+.event-title h2 {
   margin: 0;
   font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+.event-title h4 {
+  margin: 4px 0 0;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  font-weight: normal;
 }
 
 .event-subtitle {
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   font-size: 1rem;
   color: #666;
+  line-height: 1.2;
 }
 
 /* LEADERBOARD SECTION */
