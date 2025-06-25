@@ -17,6 +17,7 @@ async function loadSheetData(sheetName = 'Regular-Season') {
     const individuals = data
       .filter(row => row.Name && !isNaN(parseInt(row.Total)))
       .map((row, index) => ({
+        number: row["Player Number"] || '',
         name: row.Name,
         total: parseInt(row.Total),
         stations: stationNumbers.map(n => row[`Station ${n}`] || '0'),
@@ -28,16 +29,17 @@ async function loadSheetData(sheetName = 'Regular-Season') {
     individuals.forEach((row, index) => {
       const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
       const highlightClass = index < 3 ? 'highlight' : '';
+      const displayName = `${row.number} - ${row.name}`;
       indivHTML += `
         <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
-          <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
+          <td>${medal ? `<span class="medal">${medal}</span>` : ''}${displayName}</td>
           <td>${row.total}</td>
         </tr>
         <tr class="details" id="${row.id}" style="display: none;">
           <td colspan="2">
             <table class="station-table">
-              <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
-              <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
+              <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}<th>Total</th></tr>
+              <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}<td>${row.total}</td></tr>
             </table>
           </td>
         </tr>
