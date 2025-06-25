@@ -1,9 +1,15 @@
 
 const sheetId = '1kFkUUcvSt2LyOJKSweQLwmZ_ZIa5qTJoNKvDLQB46mo';
-const stationNumbers = ['1', '2', '3', '4', '5', '6', '7', '8'];
+
+function getStationNumbers(sheetName) {
+  return ['Playoffs', 'Championship'].includes(sheetName)
+    ? ['5', '6', '7', '8']
+    : ['1', '2', '3', '4', '5', '6', '7', '8'];
+}
 
 async function loadSheetData(sheetName = 'Regular-Season') {
   try {
+    const stationNumbers = getStationNumbers(sheetName);
     const res = await fetch(`https://opensheet.vercel.app/${sheetId}/${sheetName}`);
     const data = await res.json();
 
@@ -19,30 +25,31 @@ async function loadSheetData(sheetName = 'Regular-Season') {
       .sort((a, b) => b.total - a.total);
 
     let indivHTML = '<table><tr><th>Name</th><th>Total</th></tr>';
-    if (sheetName === 'Regular-Season') {
-      individuals.forEach((row, index) => {
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
-        const highlightClass = index < 3 ? 'highlight' : '';
-        indivHTML += `
-          <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
-            <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
-            <td>${row.total}</td>
-          </tr>
-          <tr class="details" id="${row.id}" style="display: none;">
-            <td colspan="2">
-              <table class="station-table">
-                <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
-                <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
-              </table>
-            </td>
-          </tr>
-        `;
-      });
-    } else {
-      indivHTML += `<tr><td colspan="2" style="text-align:center;">Not scored in this round.</td></tr>`;
-    }
+    individuals.forEach((row, index) => {
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+      const highlightClass = index < 3 ? 'highlight' : '';
+      indivHTML += `
+        <tr class="clickable ${highlightClass}" onclick="toggleDetails('${row.id}')">
+          <td>${medal ? `<span class="medal">${medal}</span>` : ''}${row.name}</td>
+          <td>${row.total}</td>
+        </tr>
+        <tr class="details" id="${row.id}" style="display: none;">
+          <td colspan="2">
+            <table class="station-table">
+              <tr>${stationNumbers.map(n => `<th>${n}</th>`).join('')}</tr>
+              <tr>${row.stations.map(s => `<td>${s}</td>`).join('')}</tr>
+            </table>
+          </td>
+        </tr>
+      `;
+    });
     indivHTML += '</table>';
     document.getElementById('individual-board').innerHTML = indivHTML;
+
+    const indivNote = document.getElementById("individual-note");
+    if (indivNote) {
+      indivNote.style.display = ['Playoffs', 'Championship'].includes(sheetName) ? 'block' : 'none';
+    }
 
     // TEAMS
     const teamMap = {};
