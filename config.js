@@ -98,7 +98,7 @@ const CONFIG = {
   //                    scoring" disclaimer above the individuals board
   //
   tabs: [
-    { name: 'Regular Season', sheet: 'Regular-Season', stations: ['1','2','3','4','5','6','7','8'], default: true },
+    { name: 'Regular Season', sheet: 'Regular-Season', stations: ['1','2','3','4','5','6','7','8','9','10'], default: true },
     { name: 'Championship',   sheet: 'Playoffs',        stations: ['5','6','7','8'], officialNote: true }
   ],
 
