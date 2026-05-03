@@ -99,8 +99,7 @@ const CONFIG = {
   //
   tabs: [
     { name: 'Regular Season', sheet: 'Regular-Season', stations: ['1','2','3','4','5','6','7','8'], default: true },
-    { name: 'Playoffs',       sheet: 'Playoffs',       stations: ['5','6','7','8'], officialNote: true },
-    { name: 'Championship',   sheet: 'Championship',   stations: ['5','6','7','8'], officialNote: true }
+    { name: 'Championship',   sheet: 'Playoffs',        stations: ['5','6','7','8'], officialNote: true }
   ],
 
 
