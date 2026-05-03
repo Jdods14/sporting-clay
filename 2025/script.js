@@ -39,7 +39,7 @@ async function loadSheetData(sheetName) {
   const stationNumbers = tab.stations;
 
   try {
-    const res = await fetch(`https://opensheet.vercel.app/${CONFIG.sheetId}/${sheetName}`);
+    const res = await fetch(`https://opensheet.elk.sh/${CONFIG.sheetId}/${sheetName}`);
     const data = await res.json();
 
     // INDIVIDUALS
