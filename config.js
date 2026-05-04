@@ -49,8 +49,8 @@ const CONFIG = {
   //  HEADER (the band at the top of the page)
   // ---------------------------------------------------------------------------
 
-  eventTitle:    'USS New Jersey',                // big bold line
-  eventSubtitle: 'Sporting Clay Invitational',    // smaller line below
+  eventTitle:    'Battleship New Jersey',                  // big bold line
+  eventSubtitle: '2nd Annual Sporting Clay Invitational',  // smaller line below
 
   // The line under the title reads:  "<scoresLabel> | <eventDate>"
   // Use 'Live Scores' during the event and 'Final Results' after it ends.
